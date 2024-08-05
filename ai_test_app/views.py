@@ -30,4 +30,4 @@ def index(request):
     else:
         form = PromptForm()
 
-    render(request, 'index.html', {'form': form, 'output': output})
+    return render(request, 'index.html', {'form': form, 'output': output})
