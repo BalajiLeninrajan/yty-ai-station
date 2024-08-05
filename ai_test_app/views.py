@@ -1,11 +1,12 @@
 from django.shortcuts import render
 from django import forms
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers import AutoTokenizer, pipeline
 
 import torch
 
-model = AutoModelForCausalLM.from_pretrained("EleutherAI/gpt-j-6B")
+model = torch.load("../ai_models/gptj.pt")
 tokenizer = AutoTokenizer.from_pretrained("EleutherAI/gpt-j-6B")
+gen = pipeline("text-generation",model=model,tokenizer=tokenizer,device=0)
 
 
 class PromptForm(forms.Form):
@@ -18,15 +19,7 @@ def index(request):
         form = PromptForm(request.POST)
         if form.is_valid():
             prompt = form.cleaned_data['prompt']
-            input_ids = tokenizer(
-                prompt, return_tensors="pt").input_ids
-            gen_tokens = model.generate(
-                input_ids,
-                do_sample=True,
-                temperature=0.9,
-                max_length=100,
-            )
-            output = tokenizer.batch_decode(gen_tokens)[0]
+            output = gen(prompt)
     else:
         form = PromptForm()
 
