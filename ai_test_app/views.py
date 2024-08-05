@@ -4,7 +4,6 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 
 import torch
 
-device = "cpu"
 model = AutoModelForCausalLM.from_pretrained("EleutherAI/gpt-j-6B")
 tokenizer = AutoTokenizer.from_pretrained("EleutherAI/gpt-j-6B")
 
@@ -20,7 +19,7 @@ def index(request):
         if form.is_valid():
             prompt = form.cleaned_data['prompt']
             input_ids = tokenizer(
-                prompt, return_tensors="pt").input_ids.to(device)
+                prompt, return_tensors="pt").input_ids
             gen_tokens = model.generate(
                 input_ids,
                 do_sample=True,
