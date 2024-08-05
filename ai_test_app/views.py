@@ -1,16 +1,15 @@
 from django.shortcuts import render
 from django import forms
-from transformers import GPTJForCausalLM, AutoTokenizer
+from transformers import AutoModelForCausalLM, AutoTokenizer
 
 import torch
 
 device = "cpu"
-model = GPTJForCausalLM.from_pretrained(
-    "EleutherAI/gpt-j-6B", torch_dtype=torch.float16).to(device)
+model = AutoModelForCausalLM.from_pretrained("EleutherAI/gpt-j-6B")
 tokenizer = AutoTokenizer.from_pretrained("EleutherAI/gpt-j-6B")
 
 
-class PromptForm():
+class PromptForm(forms.Form):
     prompt = forms.CharField(label='Prompt')
 
 
